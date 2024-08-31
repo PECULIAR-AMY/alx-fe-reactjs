@@ -1,5 +1,5 @@
 // src/components/RecommendationsList.jsx
-import { useRecipeStore } from '../recipeStore';
+import { useRecipeStore } from '../components/recipeStore';
 
 const RecommendationsList = () => {
     const generateRecommendations = useRecipeStore(state => state.generateRecommendations);

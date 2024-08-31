@@ -1,5 +1,5 @@
 // src/components/RecipeDetails.jsx
-import { useRecipeStore } from '../recipeStore';
+import { useRecipeStore } from '../components/recipeStore';
 import EditRecipeForm from './EditRecipeForm';
 import DeleteRecipeButton from './DeleteRecipeButton';
 
