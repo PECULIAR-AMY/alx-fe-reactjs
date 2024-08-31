@@ -1,12 +1,12 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-import Home from './Components/Home';
-import About from './Components/About';
-import Contact from './Components/Contact';
-import Navbar from './Components/Navbar';
+import Home from './components/Home';
+import About from './components/About';
+import Contact from './components/Contact';
+import Navbar from './components/Navbar';
 import Services from './Components/Services'
-import Footer from './Components/Footer'
+import Footer from './components/Footer'
 
 
 
