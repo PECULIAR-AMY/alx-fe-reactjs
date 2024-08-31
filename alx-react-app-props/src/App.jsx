@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import './App.css';
 import UserDetails from './Components/UserDetails';
-import { UserContext } from './UserContext';
+import { UserContext } from './Components/UserContext';
 
 
 class App extends Component {
