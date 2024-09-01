@@ -1,23 +1,26 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import BlogPostDetails from './components/BlogPostDetails';
 import Profile from './components/Profile';
-import ProfileDetails from './components/ProfileDetails';
-import ProfileSettings from './components/ProfileSettings';
+import ProtectedRoute from './components/ProtectedRoute';
 
-function App () {
-  return (
-    <>
-      <Route>
-      <Route>
-        <Route path="profile" element={<Profile />}>
-          <Route path="details" element={<ProfileDetails />} />
-          <Route path="settings" element={<ProfileSettings />} />
-        </Route>
-        {/* Add other routes here as needed */}
-      </Route>
-    </Route>
-    </>
-  )
+function App() {
+	return (
+		<>
+			<Router>
+				<Routes>
+					<Route
+						path='/profile'
+						element={
+							<ProtectedRoute>
+								<Profile />
+							</ProtectedRoute>
+						}
+					/>
+					<Route path="/blog/:id" element={<BlogPostDetails />} />
+				</Routes>
+			</Router>
+		</>
+	);
 }
 
 export default App;
