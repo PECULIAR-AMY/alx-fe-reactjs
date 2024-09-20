@@ -10,7 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*.localREACT_APP_GITHUB_API_KEY
+.env
 
 # Editor directories and files
 .vscode/*
