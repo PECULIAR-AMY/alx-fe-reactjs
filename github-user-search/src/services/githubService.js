@@ -7,6 +7,8 @@ export const fetchUserData = async () => {
   return response.data;
 };
 
+export default githubService;
+
 
 
 
