@@ -1,33 +1,4 @@
-// import React, { Component} from 'react';
-// import './App.css';
-// import Search from './components/Search';
-// import githubService from './services/githubService'
-
-
-// function App() {
-// 	return (
-// 		<>
-// 			<div>Search</div>
-// 			<Search />
-//       <githubService />
-// 		</>
-// 	);
-// }
-
-// export default App;
-
-
-
-
-
-
-
-
-
-
-
-
- import { useState } from 'react';
+import { useState } from 'react';
  import axios from 'axios'; // Import axios for API requests
 
 const Search = () => {
