@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchUserData } from "../services/githubService"; // Ensure this is correctly imported
+import { fetchUserData } from "../services/githubService"; // Ensure this service is properly imported
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,28 +9,40 @@ const Search = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleChange = (event) => {
+  // Handle form inputs correctly by accessing event.target.value only from inputs
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
-    if (name === "searchTerm") {
-      setSearchTerm(value);
-    } else if (name === "location") {
-      setLocation(value);
-    } else if (name === "minRepos") {
-      setMinRepos(value);
+
+    switch (name) {
+      case "searchTerm":
+        setSearchTerm(value);
+        break;
+      case "location":
+        setLocation(value);
+        break;
+      case "minRepos":
+        setMinRepos(value);
+        break;
+      default:
+        break;
     }
   };
 
+  // Handle form submission and API request
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     if (!searchTerm.trim()) {
       setError("Please enter a username");
       return;
     }
+
     setIsLoading(true);
     setError(null); // Clear any previous errors
 
     try {
       const response = await fetchUserData(searchTerm, location, minRepos);
+
       if (response && response.items && response.items.length > 0) {
         setUserData(response.items);
         setError(null); // Clear the error if users are found
@@ -52,7 +64,7 @@ const Search = () => {
           name="searchTerm"
           type="text"
           value={searchTerm}
-          onChange={handleChange}
+          onChange={handleInputChange} // Correctly handle input changes
           placeholder="Search GitHub Username"
           className="border p-2 rounded"
         />
@@ -61,7 +73,7 @@ const Search = () => {
           name="location"
           type="text"
           value={location}
-          onChange={handleChange}
+          onChange={handleInputChange} // Correctly handle input changes
           placeholder="Location (optional)"
           className="border p-2 rounded"
         />
@@ -70,7 +82,7 @@ const Search = () => {
           name="minRepos"
           type="number"
           value={minRepos}
-          onChange={handleChange}
+          onChange={handleInputChange} // Correctly handle input changes
           placeholder="Minimum Repositories (optional)"
           className="border p-2 rounded"
         />
