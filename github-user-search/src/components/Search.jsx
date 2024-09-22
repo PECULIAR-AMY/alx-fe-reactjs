@@ -10,7 +10,8 @@ const Search = () => {
   const [error, setError] = useState(null);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target; // Correctly accessing name and value
+    // Ensure it's only for inputs with name attributes defined
     if (name === "searchTerm") {
       setSearchTerm(value);
     } else if (name === "location") {
@@ -31,10 +32,8 @@ const Search = () => {
 
     try {
       const response = await fetchUserData(searchTerm, location, minRepos);
-      if (response.items && response.items.length > 0) {
-        setUserData(response.items);
-      } else {
-        setUserData([]);
+      setUserData(response.items || []); // Assuming response structure
+      if (response.items.length === 0) {
         setError("Looks like we can't find the user.");
       }
     } catch (error) {
@@ -52,7 +51,7 @@ const Search = () => {
           name="searchTerm"
           type="text"
           value={searchTerm}
-          onChange={handleChange}
+          onChange={handleChange} // Attach handleChange only to inputs
           placeholder="Search GitHub Username"
           className="border p-2 rounded"
         />
@@ -62,7 +61,7 @@ const Search = () => {
           name="location"
           type="text"
           value={location}
-          onChange={handleChange}
+          onChange={handleChange} // Attach handleChange only to inputs
           placeholder="Location (optional)"
           className="border p-2 rounded"
         />
@@ -72,7 +71,7 @@ const Search = () => {
           name="minRepos"
           type="number"
           value={minRepos}
-          onChange={handleChange}
+          onChange={handleChange} // Attach handleChange only to inputs
           placeholder="Minimum Repositories (optional)"
           className="border p-2 rounded"
         />
@@ -85,32 +84,35 @@ const Search = () => {
 
       {isLoading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
-
-      {/* Only display users when there is no error and not loading */}
-      {!isLoading && !error && userData.length > 0 && (
-        <div className="mt-4">
-          {userData.map((user) => (
-            <div key={user.id} className="border p-4 rounded mb-4">
-              <img
-                src={user.avatar_url}
-                alt={user.login}
-                className="rounded-full w-16 h-16"
-              />
-              <p className="font-bold">{user.login}</p>
-              <p>Location: {user.location || "N/A"}</p>
-              <p>Repos: {user.public_repos}</p>
-              <a
-                href={user.html_url}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-blue-500 underline"
-              >
-                View Profile
-              </a>
-            </div>
-          ))}
-        </div>
+      
+      {/* Display a message when no users are found */}
+      {!isLoading && userData.length === 0 && !error && (
+        <p className="text-red-500">Looks like we can't find the user.</p>
       )}
+      
+      <div className="mt-4">
+        {/* User data display */}
+        {userData.map((user) => (
+          <div key={user.id} className="border p-4 rounded mb-4">
+            <img
+              src={user.avatar_url}
+              alt={user.login}
+              className="rounded-full w-16 h-16"
+            />
+            <p className="font-bold">{user.login}</p>
+            <p>Location: {user.location || "N/A"}</p>
+            <p>Repos: {user.public_repos}</p>
+            <a
+              href={user.html_url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-blue-500 underline"
+            >
+              View Profile
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
