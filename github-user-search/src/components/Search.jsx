@@ -83,7 +83,8 @@ const Search = () => {
               href={user.html_url}
               target="_blank"
               rel="noreferrer noopener"
-              className="text-blue-500 underline">
+              className="text-blue-500 underline"
+            >
               View Profile
             </a>
           </div>
