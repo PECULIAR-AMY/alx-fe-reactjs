@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchUserData } from "../services/githubService";
+import { fetchUserData } from "../services/githubService"; // Ensure this is correctly imported
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,8 +10,7 @@ const Search = () => {
   const [error, setError] = useState(null);
 
   const handleChange = (event) => {
-    const { name, value } = event.target; // Correctly accessing name and value
-    // Ensure it's only for inputs with name attributes defined
+    const { name, value } = event.target;
     if (name === "searchTerm") {
       setSearchTerm(value);
     } else if (name === "location") {
@@ -28,13 +27,16 @@ const Search = () => {
       return;
     }
     setIsLoading(true);
-    setError(null); // Clear previous errors
+    setError(null); // Clear any previous errors
 
     try {
       const response = await fetchUserData(searchTerm, location, minRepos);
-      setUserData(response.items || []); // Assuming response structure
-      if (response.items.length === 0) {
-        setError("Looks like we can't find the user.");
+      if (response && response.items && response.items.length > 0) {
+        setUserData(response.items);
+        setError(null); // Clear the error if users are found
+      } else {
+        setUserData([]); // Empty user data if no users are found
+        setError("Looks like we can't find the user."); // Correct error message
       }
     } catch (error) {
       setError("Error fetching user data. Please try again.");
@@ -46,52 +48,50 @@ const Search = () => {
   return (
     <div className="max-w-lg mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        {/* searchTerm input */}
         <input
           name="searchTerm"
           type="text"
           value={searchTerm}
-          onChange={handleChange} // Attach handleChange only to inputs
+          onChange={handleChange}
           placeholder="Search GitHub Username"
           className="border p-2 rounded"
         />
 
-        {/* location input */}
         <input
           name="location"
           type="text"
           value={location}
-          onChange={handleChange} // Attach handleChange only to inputs
+          onChange={handleChange}
           placeholder="Location (optional)"
           className="border p-2 rounded"
         />
 
-        {/* minRepos input */}
         <input
           name="minRepos"
           type="number"
           value={minRepos}
-          onChange={handleChange} // Attach handleChange only to inputs
+          onChange={handleChange}
           placeholder="Minimum Repositories (optional)"
           className="border p-2 rounded"
         />
 
-        {/* Submit button */}
         <button type="submit" className="p-2 bg-blue-500 text-white rounded">
           Search
         </button>
       </form>
 
       {isLoading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
       
-      {/* Display a message when no users are found */}
-      {!isLoading && userData.length === 0 && !error && (
+      {/* Display error message when there's an error */}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* If there's no error, no loading, and no users found, show this message */}
+      {!isLoading && !error && userData.length === 0 && (
         <p className="text-red-500">Looks like we can't find the user.</p>
       )}
-      
+
+      {/* Display user data if users are found */}
       <div className="mt-4">
-        {/* User data display */}
         {userData.map((user) => (
           <div key={user.id} className="border p-4 rounded mb-4">
             <img
@@ -100,8 +100,6 @@ const Search = () => {
               className="rounded-full w-16 h-16"
             />
             <p className="font-bold">{user.login}</p>
-            <p>Location: {user.location || "N/A"}</p>
-            <p>Repos: {user.public_repos}</p>
             <a
               href={user.html_url}
               target="_blank"
