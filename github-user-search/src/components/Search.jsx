@@ -9,6 +9,7 @@ const Search = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Handle form inputs correctly by accessing event.target.value only from inputs
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -27,6 +28,7 @@ const Search = () => {
     }
   };
 
+  // Handle form submission and API request
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -36,19 +38,20 @@ const Search = () => {
     }
 
     setIsLoading(true);
-    setError(null);
+    setError(null); // Clear any previous errors
 
     try {
       const response = await fetchUserData(searchTerm, location, minRepos);
 
       if (response && response.items && response.items.length > 0) {
         setUserData(response.items);
+        setError(null); // Clear the error if users are found
       } else {
-        setUserData([]);
-        setError("No users found for the given criteria.");
+        setUserData([]); // Empty user data if no users are found
+        setError("Looks like we can't find the user."); // Correct error message
       }
-    } catch (err) {
-      setError("Error fetching user data. Please try again later.");
+    } catch (error) {
+      setError("Error fetching user data. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +64,7 @@ const Search = () => {
           name="searchTerm"
           type="text"
           value={searchTerm}
-          onChange={handleInputChange}
+          onChange={handleInputChange} // Correctly handle input changes
           placeholder="Search GitHub Username"
           className="border p-2 rounded"
         />
@@ -70,7 +73,7 @@ const Search = () => {
           name="location"
           type="text"
           value={location}
-          onChange={handleInputChange}
+          onChange={handleInputChange} // Correctly handle input changes
           placeholder="Location (optional)"
           className="border p-2 rounded"
         />
@@ -79,7 +82,7 @@ const Search = () => {
           name="minRepos"
           type="number"
           value={minRepos}
-          onChange={handleInputChange}
+          onChange={handleInputChange} // Correctly handle input changes
           placeholder="Minimum Repositories (optional)"
           className="border p-2 rounded"
         />
@@ -90,8 +93,16 @@ const Search = () => {
       </form>
 
       {isLoading && <p>Loading...</p>}
+      
+      {/* Display error message when there's an error */}
       {error && <p className="text-red-500">{error}</p>}
 
+      {/* If there's no error, no loading, and no users found, show this message */}
+      {!isLoading && !error && userData.length === 0 && (
+        <p className="text-red-500">Looks like we can't find the user.</p>
+      )}
+
+      {/* Display user data if users are found */}
       <div className="mt-4">
         {userData.map((user) => (
           <div key={user.id} className="border p-4 rounded mb-4">
@@ -117,6 +128,3 @@ const Search = () => {
 };
 
 export default Search;
-
-
-
