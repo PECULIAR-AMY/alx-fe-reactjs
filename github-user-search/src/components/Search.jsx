@@ -48,7 +48,7 @@ const Search = () => {
         setError(null); // Clear the error if users are found
       } else {
         setUserData([]); // Empty user data if no users are found
-        setError("Looks like we can't find the user."); // Correct error message
+        setError(["Looks like we can't find the user."]); // Correct error message
       }
     } catch (error) {
       setError("Error fetching user data. Please try again.");
