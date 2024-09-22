@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchUserData } from "../services/githubService"; // Correctly import the API service
+import { fetchUserData } from "../services/githubService"; // Ensure this service is properly imported
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,52 +9,53 @@ const Search = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Function to handle input changes for the form fields
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    if (name === "searchTerm") setSearchTerm(value);
-    if (name === "location") setLocation(value);
-    if (name === "minRepos") setMinRepos(value);
+
+    switch (name) {
+      case "searchTerm":
+        setSearchTerm(value);
+        break;
+      case "location":
+        setLocation(value);
+        break;
+      case "minRepos":
+        setMinRepos(value);
+        break;
+      default:
+        break;
+    }
   };
 
-  // Function to handle form submission and API call
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validate if searchTerm is provided
     if (!searchTerm.trim()) {
       setError("Please enter a username");
       return;
     }
 
-    // Start loading
     setIsLoading(true);
     setError(null);
 
     try {
-      // Make the API request to fetch user data
       const response = await fetchUserData(searchTerm, location, minRepos);
 
-      // Handle case when no users are found
       if (response && response.items && response.items.length > 0) {
-        setUserData(response.items); // Set user data from the API
-        setError(null); // Clear any previous error
+        setUserData(response.items);
       } else {
-        setUserData([]); // Clear user data if no users are found
-        setError("Looks like we can't find the user."); // Display correct message
+        setUserData([]);
+        setError("No users found for the given criteria.");
       }
-    } catch (error) {
-      // Handle API errors
-      setError("Error fetching user data. Please try again.");
+    } catch (err) {
+      setError("Error fetching user data. Please try again later.");
     } finally {
-      // Stop loading after request is finished
       setIsLoading(false);
     }
   };
 
   return (
     <div className="max-w-lg mx-auto">
-      {/* Form for user input */}
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <input
           name="searchTerm"
@@ -64,6 +65,7 @@ const Search = () => {
           placeholder="Search GitHub Username"
           className="border p-2 rounded"
         />
+
         <input
           name="location"
           type="text"
@@ -72,6 +74,7 @@ const Search = () => {
           placeholder="Location (optional)"
           className="border p-2 rounded"
         />
+
         <input
           name="minRepos"
           type="number"
@@ -80,23 +83,15 @@ const Search = () => {
           placeholder="Minimum Repositories (optional)"
           className="border p-2 rounded"
         />
+
         <button type="submit" className="p-2 bg-blue-500 text-white rounded">
           Search
         </button>
       </form>
 
-      {/* Display loading state */}
       {isLoading && <p>Loading...</p>}
-
-      {/* Display error message */}
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* If there's no error, no loading, and no users found, show this message */}
-      {!isLoading && !error && userData.length === 0 && (
-        <p className="text-red-500">Looks like we can't find the user.</p>
-      )}
-
-      {/* Display user data if available */}
       <div className="mt-4">
         {userData.map((user) => (
           <div key={user.id} className="border p-4 rounded mb-4">
@@ -122,3 +117,6 @@ const Search = () => {
 };
 
 export default Search;
+
+
+
